@@ -1,4 +1,6 @@
 
+prefix: 'YOUSHOULDCHANGETHIS'
+staff: 'GIVEHIMANEGG'
 adminmodecmd:
    - /wand
 
