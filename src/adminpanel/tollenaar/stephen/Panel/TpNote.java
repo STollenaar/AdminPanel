@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.MistCore;
+package adminpanel.tollenaar.stephen.Panel;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -18,7 +17,7 @@ import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class TpNote implements CommandExecutor {
-private	MCore plugin;
+private	Core plugin;
 private	DbStuff database;
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		PermissionUser moderator = null;
@@ -29,21 +28,21 @@ private	DbStuff database;
 		if(sender instanceof Player){
 			moderator = PermissionsEx.getUser((Player) sender);
 		}else{
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " You can't tp from console to note!");
+			sender.sendMessage(plugin.getAnnouncer() + "You can't tp from console to note!");
 			return true;
 		}
-		if(!moderator.has("MistCore.tpnote")){
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " You don't have permissions for this command!");
+		if(!moderator.has("AdminPanel.tpnote")){
+			sender.sendMessage(plugin.getAnnouncer()+ "You don't have permissions for this command!");
 			return true;
 		}
 		HashMap<Integer, Integer> lookupdata = new HashMap<Integer, Integer>();
 		if(plugin.lookuplist.get(sender.getName()) == null){
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " You need to lookup the playersdata first.");
+			sender.sendMessage(plugin.getAnnouncer() + "You need to lookup the playersdata first.");
 			return true;
 		}
 		lookupdata = plugin.lookuplist.get(sender.getName());
 		if(args.length != 1){
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " This command was not used correctly. Use it as: /tpnote <lookupid>");
+			sender.sendMessage(plugin.getAnnouncer() + "This command was not used correctly. Use it as: /tpnote <lookupid>");
 			return true;
 		}
 		int lookupid;
@@ -51,30 +50,30 @@ private	DbStuff database;
 			lookupid = Integer.parseInt(args[0]);
 		} catch (NumberFormatException e)
 	    {
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " This isn't a number. Please check you argument.");
+			sender.sendMessage(plugin.getAnnouncer() + "This isn't a number. Please check you argument.");
 			return true;
 	    }
 		if(lookupdata.get(lookupid) == null){
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " This lookupid doesn't exist. please fill in a correct one");
+			sender.sendMessage(plugin.getAnnouncer() + "This lookupid doesn't exist. please fill in a correct one");
 			return true;
 		}
 		PreparedStatement pst = null;
 		ResultSet rs = null;
-		String sqlget = "SELECT * FROM `Mist_Users` WHERE `id` = ?;";
+		String sqlget = "SELECT * FROM `AdminPanel_Users` WHERE `id` = ?;";
 		try{
 			pst = database.GetCon().prepareStatement(sqlget);
 			pst.setInt(1, lookupdata.get(lookupid));
 			rs = pst.executeQuery();
 			if(rs.last()){
-				if(rs.getString("wereld").equals("CSave")){
-					sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " Sorry this note was saved by the console.");
+				if(rs.getString("world").equals("CSave")){
+					sender.sendMessage(plugin.getAnnouncer() + "Sorry this note was saved by the console.");
 					return true;
 				}
 				x = rs.getInt("x");
 				z = rs.getInt("z");
 				y = rs.getInt("y");
-				world = rs.getString("wereld");
-				sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " Teleporting to x:" + x + " z:" + z + " y:" + y + " in the world:" + world);
+				world = rs.getString("world");
+				sender.sendMessage(plugin.getAnnouncer()+ "Teleporting to x:" + x + " z:" + z + " y:" + y + " in the world:" + world);
 				Player player = (Player) sender;
 				World wereld = Bukkit.getServer().getWorld(world);
 				Location loc = new Location(wereld, x, y, z);
@@ -113,7 +112,7 @@ private	DbStuff database;
 
 	
 	
-	public TpNote(MCore instance){
+	public TpNote(Core instance){
 		this.plugin = instance;
 		this.database = instance.database;
 	}

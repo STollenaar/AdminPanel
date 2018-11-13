@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.MistCore;
+package adminpanel.tollenaar.stephen.Panel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,7 +20,7 @@ public class DbStuff {
 	private String mysqldb;
 	private String mysqlpot;
 	private String mysqlhost;
-	private MCore plugin;
+	private Core plugin;
 	private MySQL MySQl;
 	private int scheduler;
 	public FileWriters fw;
@@ -35,7 +35,7 @@ public class DbStuff {
 						PreparedStatement pst;
 						try {
 							pst = con
-									.prepareStatement("SELECT id FROM `Mist_Users` LIMIT 1;");
+									.prepareStatement("SELECT id FROM `AdminPanel_Users` LIMIT 1;");
 							pst.execute();
 						} catch (SQLException ex) {
 							opencon();
@@ -69,7 +69,7 @@ public class DbStuff {
 					playeruuid = victim.getUniqueId();
 				}
 				pst = con
-						.prepareStatement("INSERT INTO `Mist_Users` (`id`, `username`, `moderatorname`, `reason`, `type`, `x`, `y`, `z`, `tijd`, `datum`, `wereld`, `groepen`)"
+						.prepareStatement("INSERT INTO `AdminPanel_Users` (`id`, `username`, `moderatorname`, `reason`, `type`, `x`, `y`, `z`, `time`, `date`, `world`, `groups`)"
 								+ "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 				pst.setString(1, playeruuid.toString());
 				pst.setString(2, moderatorname);
@@ -112,13 +112,13 @@ public class DbStuff {
 	}
 
 	public void saveuuid(String playeruuid, String playername) {
-		String insert = "INSERT INTO Mist_playeruuid (" + "`useruuid`,"
+		String insert = "INSERT INTO AdminPanel_playeruuid (" + "`useruuid`,"
 				+ "`username`, `isonline`) VALUES (?,?,?);";
 
-		String update = "UPDATE Mist_playeruuid SET"
+		String update = "UPDATE AdminPanel_playeruuid SET"
 				+ "`username`=? WHERE `useruuid`=?;";
 
-		String test = "SELECT * FROM Mist_playeruuid WHERE `useruuid`=?";
+		String test = "SELECT * FROM AdminPanel_playeruuid WHERE `useruuid`=?";
 		PreparedStatement pst = null;
 		try {
 			pst = con.prepareStatement(test);
@@ -161,7 +161,7 @@ public class DbStuff {
 	}
 
 	public void updateonlinestatus(String playeruuid, boolean isonline) {
-		String setonline = "UPDATE Mist_playeruuid SET "
+		String setonline = "UPDATE AdminPanel_playeruuid SET "
 				+ "`isonline`=? WHERE `useruuid`=?;";
 
 		PreparedStatement pst = null;
@@ -199,7 +199,7 @@ public class DbStuff {
 	}
 	
 	public void onshutdown(){
-		String select = "UPDATE Mist_playeruuid SET `isonline`=0 WHERE `isonline`=1;";
+		String select = "UPDATE AdminPanel_playeruuid SET `isonline`=0 WHERE `isonline`=1;";
 		PreparedStatement pst = null;
 		try {
 			pst = con.prepareStatement(select);
@@ -230,19 +230,19 @@ public class DbStuff {
 		Statement statement;
 		try {
 			statement = con.createStatement();
-			statement.executeUpdate("CREATE TABLE IF NOT EXISTS Mist_Users ("
+			statement.executeUpdate("CREATE TABLE IF NOT EXISTS AdminPanel_Users ("
 					+ "id INTEGER PRIMARY KEY AUTO_INCREMENT, "
 					+ "username VARCHAR(45) NOT NULL, "
 					+ "moderatorname VARCHAR(45) NOT NULL, "
 					+ "reason VARCHAR(45) NOT NULL, "
 					+ "type INTEGER NOT NULL, " + "x INTEGER NOT NULL, "
 					+ "y INTEGER NOT NULL, " + "z INTEGER NOT NULL, "
-					+ "tijd INTEGER NOT NULL, " + "datum INTEGER NOT NULL, "
-					+ "wereld VARCHAR(45) NOT NULL, "
-					+ "groepen VARCHAR(45) NOT NULL);");
+					+ "time INTEGER NOT NULL, " + "date INTEGER NOT NULL, "
+					+ "world VARCHAR(45) NOT NULL, "
+					+ "groups VARCHAR(45) NOT NULL);");
 
 			statement
-					.executeUpdate("CREATE TABLE IF NOT EXISTS Mist_playeruuid ("
+					.executeUpdate("CREATE TABLE IF NOT EXISTS AdminPanel_playeruuid ("
 							+ "useruuid VARCHAR(50) PRIMARY KEY,"
 							+ "username VARCHAR(50) NOT NULL,"
 							+ "isonline TINYINT(1) NOT NULL);");
@@ -262,7 +262,7 @@ public class DbStuff {
 				mysqlpass);
 	}
 
-	public DbStuff(MCore instance) {
+	public DbStuff(Core instance) {
 		this.plugin = instance;
 		this.fw = instance.fw;
 	}

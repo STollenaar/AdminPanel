@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.MistCore;
+package adminpanel.tollenaar.stephen.Panel;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,12 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-
-
-
-import mcore.tollenaar.stephen.Admin.Active;
-import mcore.tollenaar.stephen.Admin.Storage;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,12 +14,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import adminpanel.tollenaar.stephen.Admin.Active;
+import adminpanel.tollenaar.stephen.Admin.Storage;
+
 public class FileWriters {
-	private MCore plugin;
+	private Core plugin;
 	
 	private File direct;
 	private Storage storage;
-	public FileWriters(MCore instance){
+	public FileWriters(Core instance){
 		this.plugin = instance;
 		filecheck();
 	}
@@ -37,7 +34,7 @@ public class FileWriters {
 	
 	
 	public void filecheck(){
-		directory = new File(Bukkit.getServer().getPluginManager().getPlugin("MistCore").getDataFolder(), "offline");
+		directory = new File(Bukkit.getServer().getPluginManager().getPlugin("AdminPanel").getDataFolder(), "offline");
 		if(!directory.exists()){
 			directory.mkdir();
 		}
@@ -134,6 +131,7 @@ public class FileWriters {
 		}
 	}
 
+	//you are some curious to see these namings.. no worries :)
 	public void addline(String username, String moderatorname, String reason, int type, int x, int y, int z, long tijd, long datum, String wereld, String groepen){
 		
 		currentconfig.set(lastadded + "." +username + ".moderator", moderatorname);
@@ -142,10 +140,10 @@ public class FileWriters {
 		currentconfig.set(lastadded + "." +username + ".x", x);
 		currentconfig.set(lastadded + "." +username +".y", y);
 		currentconfig.set(lastadded + "." +username+ ".z", z);
-		currentconfig.set(lastadded + "." +username +".wereld", wereld);
-		currentconfig.set(lastadded + "." +username +".tijd", tijd);
-		currentconfig.set(lastadded + "." +username + ".datum", datum);
-		currentconfig.set(lastadded + "." +username + ".groepen", groepen);
+		currentconfig.set(lastadded + "." +username +".world", wereld);
+		currentconfig.set(lastadded + "." +username +".time", tijd);
+		currentconfig.set(lastadded + "." +username + ".date", datum);
+		currentconfig.set(lastadded + "." +username + ".groups", groepen);
 		saveyml(currentconfig, current);
 		lastadded++;
 	}
@@ -164,10 +162,10 @@ public class FileWriters {
 				int x = tempconfig.getInt(i + "." +keys + ".x");
 				int y = tempconfig.getInt(i + "." +keys + ".y");
 				int z = tempconfig.getInt(i + "." +keys + ".z");
-				String wereld = tempconfig.getString(i + "." +keys + ".wereld");
-				long tijd = tempconfig.getLong(i + "." +keys + ".tijd");
-				long datum = tempconfig.getLong(i + "." +keys + ".datum");
-				String groepen = tempconfig.getString(i + "." +keys + ".groepen");
+				String wereld = tempconfig.getString(i + "." +keys + ".world");
+				long tijd = tempconfig.getLong(i + "." +keys + ".time");
+				long datum = tempconfig.getLong(i + "." +keys + ".date");
+				String groepen = tempconfig.getString(i + "." +keys + ".groups");
 				plugin.database.saveto(username, moderatorname, reason, type, x, y, z, tijd, datum, wereld, groepen);
 			}
 			}

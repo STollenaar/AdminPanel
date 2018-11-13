@@ -1,6 +1,6 @@
-name: MistCore
-main: mcore.tollenaar.stephen.MistCore.MCore
-version: 1.7.9
+name: AdminPanel
+main: adminpanel.tollenaar.stephen.Panel.Core
+version: 1.12.1
 authors: [guitargun]
 description: what did I do wrong? wheres you prove well here it is
 commands:

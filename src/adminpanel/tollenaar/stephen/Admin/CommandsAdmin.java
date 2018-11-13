@@ -1,21 +1,20 @@
-package mcore.tollenaar.stephen.Admin;
+package adminpanel.tollenaar.stephen.Admin;
 
-
-import mcore.tollenaar.stephen.MistCore.MCore;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import adminpanel.tollenaar.stephen.Panel.Core;
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class CommandsAdmin implements CommandExecutor{
-	private MCore plugin;
+	private Core plugin;
 	private Storage storage;
 	
-	public CommandsAdmin(MCore instance){
+	public CommandsAdmin(Core instance){
 		this.plugin = instance;
 		this.storage = instance.storage;
 	}
@@ -27,7 +26,7 @@ public class CommandsAdmin implements CommandExecutor{
 		if(sender instanceof Player){
 			Player player = (Player) sender;
 		PermissionUser user = PermissionsEx.getUser(player);
-		if(user.has("MAdmin.adminmode")){
+		if(user.has("AdminPanel.adminmode")){
 			if(storage.getActive(player.getUniqueId()) == null){
 				storage.addActive(player);
 			}else{

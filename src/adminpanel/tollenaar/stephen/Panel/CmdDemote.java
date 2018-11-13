@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.MistCore;
+package adminpanel.tollenaar.stephen.Panel;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -10,7 +10,7 @@ import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class CmdDemote implements CommandExecutor{
-	MCore plugin;
+	Core plugin;
 	DbStuff database;
 	Message message;
 	@SuppressWarnings("deprecation")
@@ -36,12 +36,12 @@ public class CmdDemote implements CommandExecutor{
 			y = 0;
 			world = "CSave";
 		}
-		if(moderator != null && !moderator.has("MistCore.demote")){
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " You don't have permissions for this command!");
+		if(moderator != null && !moderator.has("AdminPanel.demote")){
+			sender.sendMessage(plugin.getAnnouncer() + "You don't have permissions for this command!");
 			return true;
 		}
 		if(args.length == 0){
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " This command wasn't used correctly. Use it as: /demote <playername> <reason>");
+			sender.sendMessage(plugin.getAnnouncer() + "This command wasn't used correctly. Use it as: /demote <playername> <reason>");
 			return true;
 		}
 		if(args.length == 1){
@@ -72,7 +72,7 @@ public class CmdDemote implements CommandExecutor{
 		}
 		return true;
 	}
-	public CmdDemote(MCore instance){
+	public CmdDemote(Core instance){
 		this.plugin = instance;
 		this.database = instance.database;
 		this.message = instance.message;

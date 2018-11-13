@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.MistCore;
+package adminpanel.tollenaar.stephen.Panel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class CmdCount implements CommandExecutor{
-	MCore plugin;
+	Core plugin;
 	HashMap<Boolean, Integer> temp = new HashMap<Boolean, Integer>();
 	ArrayList<Boolean> next = new ArrayList<Boolean>();
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
@@ -22,7 +22,7 @@ public class CmdCount implements CommandExecutor{
 		if(sender instanceof Player){
 			Player player = (Player) sender;
 			PermissionUser ser = PermissionsEx.getUser(player);
-			if(!ser.has("Ysir.restart")){
+			if(!ser.has("AmindPanel.restart")){
 				pass = false;
 			}
 		}
@@ -88,7 +88,7 @@ public class CmdCount implements CommandExecutor{
 		}, 20L*10);
 		}
 	}
-	public CmdCount(MCore instance){
+	public CmdCount(Core instance){
 		this.plugin = instance;
 	}
 }

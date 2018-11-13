@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.MistCore;
+package adminpanel.tollenaar.stephen.Panel;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -17,7 +17,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class CmdBans implements CommandExecutor {
 	DbStuff database;
-	MCore plugin;
+	Core plugin;
 	Message message;
 	
 	@SuppressWarnings("deprecation")
@@ -43,8 +43,8 @@ public class CmdBans implements CommandExecutor {
 			y=0;
 			world = "Csave";
 		}
-		if(moderator != null &&!moderator.has("MistCore.ban")){
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " You don't have permissions for this command!");
+		if(moderator != null &&!moderator.has("AdminPanel.ban")){
+			sender.sendMessage(plugin.getAnnouncer() + "You don't have permissions for this command!");
 			return true;
 		}
 		String playername = null;
@@ -54,7 +54,7 @@ public class CmdBans implements CommandExecutor {
 	
 		if(cmd.getName().equalsIgnoreCase("ban") || cmd.getName().equalsIgnoreCase("qban")){
 			if(args.length < 1){
-				sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " This command wasn't used correctly. Use it as: /ban <playername> <reason>");
+				sender.sendMessage(plugin.getAnnouncer() + "This command wasn't used correctly. Use it as: /ban <playername> <reason>");
 				return true;
 			}else{
 				
@@ -79,7 +79,7 @@ public class CmdBans implements CommandExecutor {
 			database.saveto(playername, moderatorname, reason, 1, x, y, z, 0, System.currentTimeMillis()/1000l, world, groepen.toString());
 			Player player = Bukkit.getPlayer(playername);
 			if(player != null){
-				player.kickPlayer(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " You're banned from this server. Check the website for more information.");
+				player.kickPlayer(plugin.getAnnouncer()+ "You're banned from this server. Check the website for more information.");
 			}
 			user.setGroups(new String[] {plugin.getDemoteRank()});
 			}
@@ -91,7 +91,7 @@ public class CmdBans implements CommandExecutor {
 			return true;
 		}else if(cmd.getName().equalsIgnoreCase("tempban") || cmd.getName().equalsIgnoreCase("qtempban")){
 			if(args.length <2){
-				sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " This command wasn't used correctly. Use it as: /ban <playername> <time> <reason>");
+				sender.sendMessage(plugin.getAnnouncer()+ "This command wasn't used correctly. Use it as: /ban <playername> <time> <reason>");
 				
 				return true;
 			}else{
@@ -118,7 +118,7 @@ public class CmdBans implements CommandExecutor {
 			Player player = Bukkit.getPlayer(playername);
 			if(player != null){
 				String tijd = calcTime(seconds - System.currentTimeMillis() / 1000L);
-				player.kickPlayer(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " You're tempory banned from this server. You are " + tijd + " banned");		
+				player.kickPlayer(plugin.getAnnouncer() + "You're tempory banned from this server. You are " + tijd + " banned");		
 				}
 			user.setGroups(new String[] {plugin.getDemoteRank()});
 			String tijd = calcTime(seconds - System.currentTimeMillis() / 1000L);
@@ -133,7 +133,7 @@ public class CmdBans implements CommandExecutor {
 		}
 		return false;
 	}
-	public CmdBans(MCore instance){
+	public CmdBans(Core instance){
 		this.plugin = instance;
 		this.database = instance.database;
 		this.message = instance.message;

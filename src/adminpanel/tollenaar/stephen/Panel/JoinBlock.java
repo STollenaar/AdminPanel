@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.MistCore;
+package adminpanel.tollenaar.stephen.Panel;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,10 +16,10 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class JoinBlock implements Listener {
-private 	MCore plugin;
+private 	Core plugin;
 private	DbStuff database;
 
-	public JoinBlock(MCore instance) {
+	public JoinBlock(Core instance) {
 		this.plugin = instance;
 		this.database = instance.database;
 	}
@@ -34,7 +34,7 @@ private	DbStuff database;
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerlogin(PlayerLoginEvent event) throws SQLException {
 		Player player = event.getPlayer();
-		String sql = "SELECT * FROM `Mist_Users` WHERE `username` LIKE ? ORDER BY `id` DESC LIMIT 1;";
+		String sql = "SELECT * FROM `AdminPanel_Users` WHERE `username` LIKE ? ORDER BY `id` DESC LIMIT 1;";
 		PreparedStatement pst = null;
 		ResultSet result = null;
 		boolean comeson  =true;
@@ -58,10 +58,7 @@ private	DbStuff database;
 					String reason = result.getString("reason").replaceAll("_",
 							" ");
 					event.disallow(PlayerLoginEvent.Result.KICK_BANNED,
-							ChatColor.RED + "[" + ChatColor.GOLD + "MistCore"
-									+ ChatColor.RED + "] " + ChatColor.AQUA
-									+ reason
-									+ ". Go to the website for an unbanticket.");
+							plugin.getAnnouncer()+ reason+ ". Ask Jack nicely.");
 					comeson = false;
 				}
 				if (result.getInt("type") == 2) {
@@ -71,9 +68,7 @@ private	DbStuff database;
 					long bannixtime = result.getLong("tijd");
 					if (bannixtime > currentnixtime) {
 						double secondsleft = bannixtime - currentnixtime;
-						String message = ChatColor.RED + "[" + ChatColor.GOLD
-								+ "MistCore" + ChatColor.RED + "] "
-								+ ChatColor.AQUA + reason + ". You are still "
+						String message =plugin.getAnnouncer()+ reason + ". You are still "
 								+ calcTime(secondsleft) + " banned.";
 						event.disallow(PlayerLoginEvent.Result.KICK_BANNED,
 								message);

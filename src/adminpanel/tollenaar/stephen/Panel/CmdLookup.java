@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.MistCore;
+package adminpanel.tollenaar.stephen.Panel;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,7 +23,7 @@ import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class CmdLookup implements CommandExecutor {
-	private MCore plugin;
+	private Core plugin;
 	private DbStuff database;
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		database.checkcon();
@@ -31,16 +31,16 @@ public class CmdLookup implements CommandExecutor {
 				if(sender instanceof Player){
 					moderator = PermissionsEx.getUser((Player) sender);
 				}
-		if(moderator != null &&!moderator.has("MistCore.lookup")){
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " You don't have permissions for this command!");
+		if(moderator != null &&!moderator.has("AdminPanel.lookup")){
+			sender.sendMessage(plugin.getAnnouncer() + " You don't have permissions for this command!");
 			return true;
 		}
 		if(args.length == 0){
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " This command wasn't used correctly. Use it as /lookup <playername>");
+			sender.sendMessage(plugin.getAnnouncer() + "This command wasn't used correctly. Use it as /lookup <playername>");
 			return true;
 		}
 		HashMap<Integer, Integer> lookupmap = new HashMap<Integer, Integer>();
-		String startmessage = ChatColor.GOLD + "========" + ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.GOLD + "========";
+		String startmessage = ChatColor.GOLD + "========" + ChatColor.RED + "[" + ChatColor.GOLD + plugin.getNamePrefix() + ChatColor.RED + "]" + ChatColor.GOLD + "========";
 		String totalentries = ChatColor.GOLD + "Total notes found: ";
 		String latest = ChatColor.GOLD + "Showing the last 5 of user " + args[0];
 		String ent1 = ChatColor.RED + "1. ";
@@ -48,12 +48,12 @@ public class CmdLookup implements CommandExecutor {
 		String ent3 = ChatColor.RED +  "3. ";
 		String ent4 = ChatColor.RED +  "4. ";
 		String ent5 = ChatColor.RED +  "5. ";
-		String website = ChatColor.AQUA + "Want to see more of this player visit: ysir.eu/mistcore/" + args[0];
+		String website = ChatColor.AQUA + "Want to see more of this player go to your database or setup a site and let me know..." + args[0];
 		String type = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		int notes = 0;
-		String sqllimit = "SELECT * FROM `Mist_Users` WHERE `username` LIKE ? ORDER BY `id` DESC LIMIT 5";
+		String sqllimit = "SELECT * FROM `AdminPanel_Users` WHERE `username` LIKE ? ORDER BY `id` DESC LIMIT 5";
 		try{
 			
 			Player victim = Bukkit.getPlayer(args[0]);
@@ -89,8 +89,8 @@ public class CmdLookup implements CommandExecutor {
 				}
 				if(rs.getInt("type") == 2){
 					type = ChatColor.GOLD + "Tempban";
-					 if (rs.getLong("tijd") >= currentnixtime) {
-				            type = type + ", still " + calcTimeShort(rs.getLong("tijd") - currentnixtime);
+					 if (rs.getLong("time") >= currentnixtime) {
+				            type = type + ", still " + calcTimeShort(rs.getLong("time") - currentnixtime);
 				          } else {
 				            type = type + ", ended";
 				          }
@@ -222,7 +222,7 @@ public String calcTimeShort(double secondsleft)
   message = message + (int)Math.floor(secondsleft) + "s";
   return message;
 }
-	public CmdLookup(MCore instance){
+	public CmdLookup(Core instance){
 		this.plugin = instance;
 		this.database = instance.database;
 	}

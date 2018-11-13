@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.MistCore;
+package adminpanel.tollenaar.stephen.Panel;
 
 
 import org.bukkit.ChatColor;
@@ -13,6 +13,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 public class CmdUnban implements CommandExecutor {
 	private DbStuff database;
 	private Message message;
+	private Core plugin;
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd,
@@ -30,10 +31,8 @@ public class CmdUnban implements CommandExecutor {
 			z = (int) ((Player) sender).getLocation().getZ();
 			world = ((Player) sender).getWorld().getName();
 			moderator = PermissionsEx.getUser((Player) sender);
-			if (moderator != null & !moderator.has("MistCore.unban")) {
-				sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD
-						+ "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA
-						+ " You don't have permissions for this command!");
+			if (moderator != null & !moderator.has("AdminPanel.unban")) {
+				sender.sendMessage(plugin.getAnnouncer()+ "You don't have permissions for this command!");
 				return true;
 			}
 		} else {
@@ -46,14 +45,7 @@ public class CmdUnban implements CommandExecutor {
 
 		String playername;
 		if (args.length == 0) {
-			sender.sendMessage(ChatColor.RED
-					+ "["
-					+ ChatColor.GOLD
-					+ "MistCore"
-					+ ChatColor.RED
-					+ "]"
-					+ ChatColor.AQUA
-					+ " This command wasn't used correctly. Use it as /unban <playername> <reason>");
+			sender.sendMessage(plugin.getAnnouncer()+ " This command wasn't used correctly. Use it as /unban <playername> <reason>");
 			return true;
 		}
 		String reason = null;
@@ -89,8 +81,9 @@ public class CmdUnban implements CommandExecutor {
 		return true;
 	}
 
-	public CmdUnban(MCore instance) {
+	public CmdUnban(Core instance) {
 		this.database = instance.database;
 		this.message = instance.message;
+		this.plugin = instance;
 	}
 }

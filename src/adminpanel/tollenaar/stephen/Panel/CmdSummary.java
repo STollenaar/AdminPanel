@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.MistCore;
+package adminpanel.tollenaar.stephen.Panel;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +21,7 @@ import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class CmdSummary implements CommandExecutor {
-private	MCore plugin;
+private	Core plugin;
 private	DbStuff database;
 
 	public boolean onCommand(CommandSender sender, Command cmd,
@@ -31,26 +31,15 @@ private	DbStuff database;
 		if (sender instanceof Player) {
 				moderator = PermissionsEx.getUser((Player) sender);
 			} else {
-				sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD
-						+ "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA
-						+ " You must be a player to use this command");
+				sender.sendMessage(plugin.getAnnouncer()+ "You must be a player to use this command");
 				return true;
 			}
 			if (!moderator.has("MistCore.summary")) {
-				sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD
-						+ "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA
-						+ " You don't have permission to use this command.");
+				sender.sendMessage(plugin.getAnnouncer()+ "You don't have permission to use this command.");
 				return true;
 			}
 			if (args.length != 1) {
-				sender.sendMessage(ChatColor.RED
-						+ "["
-						+ ChatColor.GOLD
-						+ "MistCore"
-						+ ChatColor.RED
-						+ "]"
-						+ ChatColor.AQUA
-						+ " This command wasn't used correctly. Use it as /summary <playername>");
+				sender.sendMessage(plugin.getAnnouncer()+ "This command wasn't used correctly. Use it as /summary <playername>");
 				return true;
 			}
 			int notes = 0;
@@ -61,7 +50,7 @@ private	DbStuff database;
 			int unbans = 0;
 			PreparedStatement pst = null;
 			ResultSet rs = null;
-			String sqlselect = "SELECT * FROM `Mist_Users` WHERE `username` LIKE ? AND `type` = ?;";
+			String sqlselect = "SELECT * FROM `AdminPanel_Users` WHERE `username` LIKE ? AND `type` = ?;";
 			try {
 				pst = database.GetCon().prepareStatement(sqlselect);
 				Player victim = Bukkit.getPlayer(args[0]);
@@ -183,7 +172,7 @@ private	DbStuff database;
 			return true;
 	}
 
-	public CmdSummary(MCore instance) {
+	public CmdSummary(Core instance) {
 		this.plugin = instance;
 		this.database = instance.database;
 	}

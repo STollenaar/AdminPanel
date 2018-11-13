@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.MistCore;
+package adminpanel.tollenaar.stephen.Panel;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class SummaryListener implements Listener {
-private	MCore plugin;
+private	Core plugin;
 private	DbStuff database;
 	
 	@EventHandler
@@ -52,7 +52,7 @@ private	DbStuff database;
 			}else{
 				event.setCancelled(true);
 			}
-			String sqlselect = "SELECT * FROM `Mist_Users` WHERE `username` LIKE ? AND `type` = " + type;
+			String sqlselect = "SELECT * FROM `AdminPanel_Users` WHERE `username` LIKE ? AND `type` = " + type;
 			PreparedStatement pst = null;
 			ResultSet rs = null;
 			String playername = inventory.getName();
@@ -150,7 +150,7 @@ private	DbStuff database;
 		}
 	}
 	
-	public SummaryListener(MCore instance){
+	public SummaryListener(Core instance){
 		this.plugin = instance;
 		this.database = instance.database;
 	}

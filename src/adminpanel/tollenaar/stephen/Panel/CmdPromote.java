@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.MistCore;
+package adminpanel.tollenaar.stephen.Panel;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,9 +17,10 @@ import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class CmdPromote implements CommandExecutor {
-	private MCore plugin;
+	private Core plugin;
 	private DbStuff database;
 	private Message message;
+	
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		PermissionUser moderator = null;
@@ -42,14 +43,14 @@ public class CmdPromote implements CommandExecutor {
 			world = "CSave";
 			moderatorname = "Console";
 		}
-		if(moderator != null && !moderator.has("MistCore.promote")){
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " You don't have permissions for this command!");
+		if(moderator != null && !moderator.has("AdminPanel.promote")){
+			sender.sendMessage(plugin.getAnnouncer() + "You don't have permissions for this command!");
 			return true;
 		}
 		String reason = null;
 		int type = 5;
 		if(args.length == 0){
-			sender.sendMessage(ChatColor.RED + "[" + ChatColor.GOLD + "MistCore" + ChatColor.RED + "]" + ChatColor.AQUA + " This command wasn't used correctly. Use it as /promote <playername>");
+			sender.sendMessage(plugin.getAnnouncer()+ "This command wasn't used correctly. Use it as /promote <playername>");
 			return true;
 		}
 		if(args.length == 1){
@@ -67,7 +68,7 @@ public class CmdPromote implements CommandExecutor {
 		PermissionUser subject = PermissionsEx.getUser(args[0]);
 		PreparedStatement pst = null;
 		ResultSet rs = null;
-		String sqlsel = "SELECT * FROM `Mist_Users` WHERE `username` LIKE ? AND (`type` = 1 OR `type` = 2 OR `type` = 3) ORDER BY `id` DESC LIMIT 1";
+		String sqlsel = "SELECT * FROM `AdminPanel_Users` WHERE `username` LIKE ? AND (`type` = 1 OR `type` = 2 OR `type` = 3) ORDER BY `id` DESC LIMIT 1";
 		try{
 			pst = database.GetCon().prepareStatement(sqlsel);
 			Player victim = Bukkit.getPlayer(playername);
@@ -130,7 +131,7 @@ public class CmdPromote implements CommandExecutor {
 	  {
 	    user.setGroups(rangen.split(":"));
 	  }
-	  public CmdPromote(MCore instance){
+	  public CmdPromote(Core instance){
 		  this.plugin = instance;
 		  this.database = instance.database;
 		  this.message = instance.message;

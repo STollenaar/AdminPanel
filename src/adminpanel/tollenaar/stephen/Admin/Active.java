@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.Admin;
+package adminpanel.tollenaar.stephen.Admin;
 
 import java.util.UUID;
 

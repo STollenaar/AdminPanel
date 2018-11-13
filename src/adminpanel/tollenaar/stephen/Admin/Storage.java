@@ -1,4 +1,4 @@
-package mcore.tollenaar.stephen.Admin;
+package adminpanel.tollenaar.stephen.Admin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,17 +10,17 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import adminpanel.tollenaar.stephen.Panel.Core;
 import ru.tehkode.permissions.PermissionGroup;
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
-import mcore.tollenaar.stephen.MistCore.MCore;
 
 public class Storage {
-	private MCore plugin;
+	private Core plugin;
 
 	private Map<UUID, Active> ACTIVE_ADMINS = new HashMap<>();
 
-	public Storage(MCore instance) {
+	public Storage(Core instance) {
 		this.plugin = instance;
 	}
 
