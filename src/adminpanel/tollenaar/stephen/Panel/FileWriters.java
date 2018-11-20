@@ -22,6 +22,7 @@ public class FileWriters {
 	
 	private File direct;
 	private Storage storage;
+	
 	public FileWriters(Core instance){
 		this.plugin = instance;
 		filecheck();
@@ -44,12 +45,12 @@ public class FileWriters {
 		if(!current.exists()){
 			try {
 				current.createNewFile();
-				currentconfig = YamlConfiguration.loadConfiguration(current);
 				saveyml(currentconfig,  current);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		currentconfig = YamlConfiguration.loadConfiguration(current);
 		direct = new File(plugin.getDataFolder(), "active");
 		if(!direct.exists()){
 			direct.mkdir();
@@ -133,7 +134,6 @@ public class FileWriters {
 
 	//you are some curious to see these namings.. no worries :)
 	public void addline(String username, String moderatorname, String reason, int type, int x, int y, int z, long tijd, long datum, String wereld, String groepen){
-		
 		currentconfig.set(lastadded + "." +username + ".moderator", moderatorname);
 		currentconfig.set(lastadded + "." +username + ".reason",reason);
 		currentconfig.set(lastadded + "." +username +".type", type);

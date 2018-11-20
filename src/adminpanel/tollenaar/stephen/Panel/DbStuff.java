@@ -29,22 +29,20 @@ public class DbStuff {
 	public void closecon() {
 		int timeout = 10;
 
-		int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,
-				new Runnable() {
-					public void run() {
-						PreparedStatement pst;
-						try {
-							pst = con
-									.prepareStatement("SELECT id FROM `AdminPanel_Users` LIMIT 1;");
-							pst.execute();
-						} catch (SQLException ex) {
-							opencon();
-							intvar();
-							OpenConnect();
-							closecon();
-						}
-					}
-				}, 0L, timeout * 20L);
+		int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+			public void run() {
+				PreparedStatement pst;
+				try {
+					pst = con.prepareStatement("SELECT id FROM `AdminPanel_Users` LIMIT 1;");
+					pst.execute();
+				} catch (SQLException ex) {
+					opencon();
+					intvar();
+					OpenConnect();
+					closecon();
+				}
+			}
+		}, 0L, timeout * 20L);
 		scheduler = id;
 	}
 
@@ -52,10 +50,9 @@ public class DbStuff {
 		Bukkit.getScheduler().cancelTask(scheduler);
 	}
 
-	public void saveto(String username, String moderatorname, String reason,
-			int type, int x, int y, int z, long tijd, long date, String world,
-			String groepen) {
-		if (con != null) {
+	public void saveto(String username, String moderatorname, String reason, int type, int x, int y, int z, long tijd,
+			long date, String world, String groepen) {
+		if (this.plugin.online) {
 			PreparedStatement pst = null;
 			opencon();
 			try {
@@ -68,8 +65,8 @@ public class DbStuff {
 				} else {
 					playeruuid = victim.getUniqueId();
 				}
-				pst = con
-						.prepareStatement("INSERT INTO `AdminPanel_Users` (`id`, `username`, `moderatorname`, `reason`, `type`, `x`, `y`, `z`, `time`, `date`, `world`, `groups`)"
+				pst = con.prepareStatement(
+						"INSERT INTO `AdminPanel_Users` (`id`, `username`, `moderatorname`, `reason`, `type`, `x`, `y`, `z`, `time`, `date`, `world`, `groups`)"
 								+ "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 				pst.setString(1, playeruuid.toString());
 				pst.setString(2, moderatorname);
@@ -85,9 +82,8 @@ public class DbStuff {
 				pst.execute();
 			} catch (SQLException e) {
 				this.plugin.getLogger().severe(e.getMessage());
-				plugin.getLogger().info(
-						"There was an error during the savings of the data to the database: "
-								+ e.getMessage());
+				plugin.getLogger()
+						.info("There was an error during the savings of the data to the database: " + e.getMessage());
 				try {
 					if (pst != null) {
 						pst.close();
@@ -106,8 +102,7 @@ public class DbStuff {
 			}
 			closecon();
 		} else {
-			fw.addline(username, moderatorname, reason, type, x, y, z, tijd,
-					date, world, groepen);
+			fw.addline(username, moderatorname, reason, type, x, y, z, tijd, date, world, groepen);
 		}
 	}
 
@@ -115,8 +110,7 @@ public class DbStuff {
 		String insert = "INSERT INTO AdminPanel_playeruuid (" + "`useruuid`,"
 				+ "`username`, `isonline`) VALUES (?,?,?);";
 
-		String update = "UPDATE AdminPanel_playeruuid SET"
-				+ "`username`=? WHERE `useruuid`=?;";
+		String update = "UPDATE AdminPanel_playeruuid SET" + "`username`=? WHERE `useruuid`=?;";
 
 		String test = "SELECT * FROM AdminPanel_playeruuid WHERE `useruuid`=?";
 		PreparedStatement pst = null;
@@ -161,69 +155,72 @@ public class DbStuff {
 	}
 
 	public void updateonlinestatus(String playeruuid, boolean isonline) {
-		String setonline = "UPDATE AdminPanel_playeruuid SET "
-				+ "`isonline`=? WHERE `useruuid`=?;";
+		if (this.plugin.online) {
+			String setonline = "UPDATE AdminPanel_playeruuid SET "
 
-		PreparedStatement pst = null;
-		try {
-			pst = con.prepareStatement(setonline);
-			if (isonline) {
-				pst.setInt(1, 1);
-			} else {
-				pst.setInt(1, 0);
-			}
-			pst.setString(2, playeruuid);
-			
-			pst.execute();
-			
-		}catch (SQLException e) {
-			e.printStackTrace();
-			try {
-				if (pst != null) {
-					pst.close();
-				}
-			} catch (SQLException ex) {
-				this.plugin.getLogger().severe(ex.getMessage());
-			}
-		} finally {
-			try {
-				if (pst != null) {
-					pst.close();
-				}
-			} catch (SQLException ex) {
-				this.plugin.getLogger().severe(ex.getMessage());
-			}
+					+ "`isonline`=? WHERE `useruuid`=?;";
 
+			PreparedStatement pst = null;
+			try {
+				pst = con.prepareStatement(setonline);
+				if (isonline) {
+					pst.setInt(1, 1);
+				} else {
+					pst.setInt(1, 0);
+				}
+				pst.setString(2, playeruuid);
+
+				pst.execute();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+				try {
+					if (pst != null) {
+						pst.close();
+					}
+				} catch (SQLException ex) {
+					this.plugin.getLogger().severe(ex.getMessage());
+				}
+			} finally {
+				try {
+					if (pst != null) {
+						pst.close();
+					}
+				} catch (SQLException ex) {
+					this.plugin.getLogger().severe(ex.getMessage());
+				}
+
+			}
 		}
-
 	}
-	
-	public void onshutdown(){
-		String select = "UPDATE AdminPanel_playeruuid SET `isonline`=0 WHERE `isonline`=1;";
-		PreparedStatement pst = null;
-		try {
-			pst = con.prepareStatement(select);
-			pst.execute();
-		}catch (SQLException e) {
-			e.printStackTrace();
-			try {
-				if (pst != null) {
-					pst.close();
-				}
-			} catch (SQLException ex) {
-				this.plugin.getLogger().severe(ex.getMessage());
-			}
-		} finally {
-			try {
-				if (pst != null) {
-					pst.close();
-				}
-			} catch (SQLException ex) {
-				this.plugin.getLogger().severe(ex.getMessage());
-			}
 
+	public void onshutdown() {
+		if (this.plugin.online) {
+			String select = "UPDATE AdminPanel_playeruuid SET `isonline`=0 WHERE `isonline`=1;";
+			PreparedStatement pst = null;
+			try {
+				pst = con.prepareStatement(select);
+				pst.execute();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				try {
+					if (pst != null) {
+						pst.close();
+					}
+				} catch (SQLException ex) {
+					this.plugin.getLogger().severe(ex.getMessage());
+				}
+			} finally {
+				try {
+					if (pst != null) {
+						pst.close();
+					}
+				} catch (SQLException ex) {
+					this.plugin.getLogger().severe(ex.getMessage());
+				}
+			}
 		}
-		
+
 	}
 
 	public void TableCreate() {
@@ -231,21 +228,15 @@ public class DbStuff {
 		try {
 			statement = con.createStatement();
 			statement.executeUpdate("CREATE TABLE IF NOT EXISTS AdminPanel_Users ("
-					+ "id INTEGER PRIMARY KEY AUTO_INCREMENT, "
-					+ "username VARCHAR(45) NOT NULL, "
-					+ "moderatorname VARCHAR(45) NOT NULL, "
-					+ "reason VARCHAR(45) NOT NULL, "
-					+ "type INTEGER NOT NULL, " + "x INTEGER NOT NULL, "
-					+ "y INTEGER NOT NULL, " + "z INTEGER NOT NULL, "
-					+ "time INTEGER NOT NULL, " + "date INTEGER NOT NULL, "
-					+ "world VARCHAR(45) NOT NULL, "
-					+ "groups VARCHAR(45) NOT NULL);");
+					+ "id INTEGER PRIMARY KEY AUTO_INCREMENT, " + "username VARCHAR(45) NOT NULL, "
+					+ "moderatorname VARCHAR(45) NOT NULL, " + "reason VARCHAR(45) NOT NULL, "
+					+ "type INTEGER NOT NULL, " + "x INTEGER NOT NULL, " + "y INTEGER NOT NULL, "
+					+ "z INTEGER NOT NULL, " + "time INTEGER NOT NULL, " + "date INTEGER NOT NULL, "
+					+ "world VARCHAR(45) NOT NULL, " + "groups VARCHAR(45) NOT NULL);");
 
-			statement
-					.executeUpdate("CREATE TABLE IF NOT EXISTS AdminPanel_playeruuid ("
-							+ "useruuid VARCHAR(50) PRIMARY KEY,"
-							+ "username VARCHAR(50) NOT NULL,"
-							+ "isonline TINYINT(1) NOT NULL);");
+			statement.executeUpdate(
+					"CREATE TABLE IF NOT EXISTS AdminPanel_playeruuid (" + "useruuid VARCHAR(50) PRIMARY KEY,"
+							+ "username VARCHAR(50) NOT NULL," + "isonline TINYINT(1) NOT NULL);");
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -258,8 +249,7 @@ public class DbStuff {
 		mysqldb = plugin.getConfig().getString("mysqldb");
 		mysqlpot = plugin.getConfig().getString("mysqlport");
 		mysqlhost = plugin.getConfig().getString("mysqlhost");
-		MySQl = new MySQL(plugin, mysqlhost, mysqlpot, mysqldb, mysqluser,
-				mysqlpass);
+		MySQl = new MySQL(plugin, mysqlhost, mysqlpot, mysqldb, mysqluser, mysqlpass);
 	}
 
 	public DbStuff(Core instance) {
@@ -272,13 +262,14 @@ public class DbStuff {
 			con = connect;
 		}
 	}
-	
-	public Connection GetCon(){
+
+	public Connection GetCon() {
 		return con;
 	}
-	public void checkcon(){
+
+	public void checkcon() {
 		try {
-			if(con.isClosed()){
+			if (con.isClosed()) {
 				opencon();
 				intvar();
 				OpenConnect();
@@ -289,11 +280,11 @@ public class DbStuff {
 			OpenConnect();
 		}
 	}
-	
-	public void OpenConnect(){
+
+	public void OpenConnect() {
 		setcon(MySQl.openConnection());
 	}
-	
+
 	public void specialclock() {
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run() {
@@ -306,17 +297,13 @@ public class DbStuff {
 					TableCreate();
 					closecon();
 					fw.loadall();
-					if (!Bukkit.getPluginManager().getPlugin("MistsOfYsir")
-							.isEnabled()) {
-						Bukkit.getPluginManager().enablePlugin(
-								Bukkit.getPluginManager().getPlugin(
-										"MistsOfYsir"));
+					if (!Bukkit.getPluginManager().getPlugin("MistsOfYsir").isEnabled()) {
+						Bukkit.getPluginManager().enablePlugin(Bukkit.getPluginManager().getPlugin("MistsOfYsir"));
 					}
 				} else {
 					timer++;
 					if (timer == 30) {
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-								"countdown");
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "countdown");
 						return;
 					}
 					con = null;

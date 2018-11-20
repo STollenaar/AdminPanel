@@ -30,6 +30,8 @@ public class Core extends JavaPlugin {
 	public FileWriters fw;
 	private FileConfiguration config;
 
+	protected boolean online;
+
 	public void onEnable() {
 
 		config = this.getConfig();
@@ -59,12 +61,13 @@ public class Core extends JavaPlugin {
 				getLogger().info(
 						Ansi.ansi().fg(Ansi.Color.RED) + "No Connection to Database. Plugin is going in offline mode"
 								+ Ansi.ansi().fg(Ansi.Color.WHITE));
+				online = false;
 				break;
 			}
 
 		}
 		if (database.GetCon() != null) {
-
+			online = true;
 			getLogger().info("Databse connection has succeed");
 			database.TableCreate();
 			database.closecon();
